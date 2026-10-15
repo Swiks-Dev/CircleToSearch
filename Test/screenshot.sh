@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
 
-SAVE_DIR="$HOME/Pictures/.CircleToSearch"
-
-if [ -d "$SAVE_DIR" ]; then
-    find "$SAVE_DIR" -mindepth 1 -delete
-else
-    mkdir -p "$SAVE_DIR"
-fi
+SAVE_DIR=$(mktemp -d /tmp/circle_to_search.XXXXXX)
+trap 'rm -rf "$SAVE_DIR"' EXIT
 
 TAB_OPENED=false
 
