@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
 SAVE_DIR=$(mktemp -d /tmp/circle_to_search.XXXXXX)
-trap 'rm -rf "$SAVE_DIR"' EXIT
 
-TAB_OPENED=false
+trap 'rm -rf "$SAVE_DIR"' EXIT
 
 while true; do
     TIMESTAMP=$(date +'%Y%m%d_%H%M%S')
@@ -16,18 +15,8 @@ while true; do
         break
     fi
 
-    # Close previous browser tab if one was already opened in this loop
-    if [ "$TAB_OPENED" = true ]; then
-        if command -v wtype &>/dev/null; then
-            wtype -M ctrl -k w
-        elif command -v xdotool &>/dev/null; then
-            xdotool key ctrl+w
-        fi
-        sleep 0.3
-    fi
 
     # Upload image to temporary host and open in Google Lens
     xdg-open "https://lens.google.com/uploadbyurl?url=$(curl -s -F 'reqtype=fileupload' -F "fileToUpload=@$OUTPUT" https://catbox.moe/user/api.php)"
 
-    TAB_OPENED=true
 done
